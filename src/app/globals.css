@@ -6,4 +6,22 @@
   --primary-color: #5d7df8;
   --primary-dark: #3556b1;
   --accent: #ffb24a;
+
+  --bg-color: #f8fafc; /* light mode background */
+  --text-color: #1e293b; /* light mode text */
+}
+
+.dark {
+  --primary-color: #a5b4fc;
+  --primary-dark: #4338ca;
+  --accent: #facc15;
+  
+  --bg-color: #111827; /* dark mode background */
+  --text-color: #e0e7ff; /* dark mode text */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }

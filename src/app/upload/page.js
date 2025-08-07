@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect } from 'react';
 import { auth, storage, db } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -69,19 +70,19 @@ export default function UploadPage() {
   };
 
   return (
-    <section className="min-h-[85vh] flex items-center justify-center bg-transparent px-2">
-      <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-8">
-        <h2 className="text-3xl font-bold text-[var(--primary-color)] mb-6 drop-shadow text-center">
+    <section className="min-h-[85vh] flex items-center justify-center bg-var-bg-color dark:bg-gray-900 px-2 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg max-w-md w-full p-8 transition-colors duration-300">
+        <h2 className="text-3xl font-bold text-[var(--primary-color)] dark:text-[var(--primary-dark)] mb-6 drop-shadow text-center">
           Upload a Note (PDF)
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {error && <p className="text-red-600 text-center">{error}</p>}
+          {error && <p className="text-red-600 dark:text-red-400 text-center">{error}</p>}
           <input
             type="text"
             placeholder="Title"
             value={title}
             onChange={e => setTitle(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:border-[var(--accent)] transition"
             required
           />
           <input
@@ -89,20 +90,20 @@ export default function UploadPage() {
             placeholder="Subject"
             value={subject}
             onChange={e => setSubject(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[var(--accent)]"
+            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 focus:outline-none focus:border-[var(--accent)] transition"
             required
           />
           <input
             type="file"
             accept="application/pdf"
             onChange={handleFileChange}
-            className="w-full p-2 border border-gray-200 rounded-lg bg-gray-50"
+            className="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 transition-colors"
             required
           />
           <button
             type="submit"
             disabled={uploading}
-            className="w-full py-3 mt-2 rounded-lg bg-[var(--primary-color)] hover:bg-[var(--primary-dark)] text-white font-semibold text-lg transition disabled:bg-gray-200"
+            className="w-full py-3 mt-2 rounded-lg bg-[var(--primary-color)] dark:bg-[var(--primary-dark)] hover:opacity-90 text-white font-semibold text-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {uploading ? 'Uploading...' : 'Upload Note'}
           </button>
