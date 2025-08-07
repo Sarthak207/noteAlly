@@ -86,7 +86,7 @@ export default function DashboardPage() {
         {loading && <p className="text-center text-gray-500">Loading your notes...</p>}
 
         {!loading && notes.length === 0 && (
-          <p className="text-center text-gray-500">You haven't uploaded any notes yet.</p>
+          <p className="text-center text-gray-500">You haven&apos;t uploaded any notes yet.</p>
         )}
 
         <div className="space-y-4">
