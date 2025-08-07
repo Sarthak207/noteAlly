@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# NoteAlly
 
-## Getting Started
+> **NoteAlly** is a modern Next.js application for students to **upload, share, browse, and download high-quality study notes**.  
+> It features user authentication, note management, likes/views tracking, searches, and a dark mode UI.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **User Authentication** (Email+Password + Google Sign-In) with Firebase Auth
+- **Upload Notes** as PDF files with metadata (Title, Subject)
+- **Browse Shared Notes** with:
+  - Filters by subject ("folder"-style)
+  - Search by title or subject
+  - Like and view counts on notes
+- **User Dashboard** to manage your uploaded notes:
+  - View statistics (Total notes, Likes, Views)
+  - Download/delete your notes
+- Full **Dark Mode** toggle with smooth transitions
+- Responsive UI using **Tailwind CSS**
+- Real-time updates via Firestore listeners
+- Comments support (optional - if implemented)
+  
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Next.js 13+](https://nextjs.org/) (App Router)
+- [Firebase](https://firebase.google.com/) (Authentication, Firestore, Storage)
+- [Tailwind CSS](https://tailwindcss.com/) for styling
+- [React Hot Toast](https://react-hot-toast.com/) for notifications
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Demo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> https://note-ally-m75y.vercel.app/
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Folder Structure Overview
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+src/
+├── app/
+│ ├── layout.js # Root layout with global nav, footer, and dark mode toggle
+│ ├── page.js # Home page
+│ ├── login/page.js # Login & Sign Up forms
+│ ├── dashboard/page.js # User dashboard to manage uploaded notes
+│ ├── notes/
+│ │ ├── layout.js # Optional layout for notes section
+│ │ └── page.js # Notes browsing with folder filter and likes
+│ └── upload/page.js # Note upload page
+├── firebase.js # Firebase initialization and exports
+└── globals.css # Tailwind CSS + custom global styles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+
+Created by **Sarthak207**.  
+For questions, contact: *sarthakpardeshi207@gmail.com*
+
+---
+
+Enjoy using NoteAlly! 🚀
+
+
