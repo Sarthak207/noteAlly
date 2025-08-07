@@ -1,7 +1,7 @@
 # NoteAlly
 
-> **NoteAlly** is a modern Next.js application for students to **upload, share, browse, and download high-quality study notes**.  
-> It features user authentication, note management, likes/views tracking, searches, and a dark mode UI.
+**NoteAlly** is a modern Next.js application for students to **upload, share, browse, and download high-quality study notes**.  
+ It features user authentication, note management, likes/views tracking, searches, and a dark mode UI.
 
 ---
 
