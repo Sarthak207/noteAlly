@@ -117,29 +117,30 @@ export default function RootLayout({ children }) {
               type="button"
             >
               {isDarkMode ? (
+                // Sun icon (Heroicons)
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
                   fill="none"
                   viewBox="0 0 24 24"
+                  strokeWidth={1.5}
                   stroke="currentColor"
-                  strokeWidth={2}
+                  className="h-6 w-6"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="M12 3v1m0 16v1m8.66-7h-1M4.34 12h-1m15.36 4.36l-.71-.71M6.34 6.34l-.71-.71m12.02.71l-.71-.71M6.34 17.66l-.71-.71"
+                    d="M12 3v1.5m0 15V21m9-9h-1.5M4.5 12H3m15.364 6.364l-1.06-1.06M6.696 6.696l-1.06-1.06m0 12.728l1.06-1.06m12.728-12.728l-1.06 1.06M12 7.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5z"
                   />
                 </svg>
               ) : (
+                // Moon icon (Heroicons)
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
                   fill="currentColor"
                   viewBox="0 0 24 24"
-                  stroke="none"
+                  className="h-6 w-6"
                 >
-                  <path d="M12 3a9 9 0 1 0 9 9 7.5 7.5 0 0 1-9-9z" />
+                  <path d="M21.752 15.002A9.718 9.718 0 0 1 12 21.75a9.75 9.75 0 0 1-9.75-9.75 9.717 9.717 0 0 1 6.748-9.252 0.75 0.75 0 0 1 .976.977A7.5 7.5 0 1 0 20.774 14.026a0.75 0.75 0 0 1 .978.976z" />
                 </svg>
               )}
             </button>
@@ -149,7 +150,7 @@ export default function RootLayout({ children }) {
         <main className="transition-colors duration-300 min-h-[calc(100vh-96px)]">{children}</main>
 
         <footer className="py-6 text-center text-sm text-gray-400 select-none">
-          Made for students, inspired by PrintNOptions
+          Made for students..
         </footer>
       </body>
     </html>
