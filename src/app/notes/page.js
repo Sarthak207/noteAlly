@@ -46,7 +46,9 @@ export default function NotesPage() {
 
   // Filter notes based on search and selected subject
   const filteredNotes = notes.filter(note => {
-    const matchesSearch = note.title.toLowerCase().includes(search.toLowerCase()) || note.subject.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch =
+      note.title.toLowerCase().includes(search.toLowerCase()) ||
+      note.subject.toLowerCase().includes(search.toLowerCase());
     const matchesSubject = selectedSubject ? note.subject === selectedSubject : true;
     return matchesSearch && matchesSubject;
   });
@@ -92,37 +94,46 @@ export default function NotesPage() {
       <Toaster position="top-center" />
       <h1 className="text-4xl font-bold text-indigo-900 dark:text-indigo-200 mb-8 text-center">Shared Notes</h1>
 
-      {/* Folder / Subject selector */}
-      <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-3 mb-8">
-        <button
-          className={`px-5 py-2 rounded-full font-semibold transition ${
-            selectedSubject === null ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-          }`}
-          onClick={() => setSelectedSubject(null)}
-        >
-          All Subjects
-        </button>
-        {subjects.map(subject => (
+      {/* Filters + Search bar in one row */}
+      <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3 mb-8">
+        {/* Subject Buttons */}
+        <div className="flex flex-wrap gap-3">
           <button
-            key={subject}
             className={`px-5 py-2 rounded-full font-semibold transition ${
-              selectedSubject === subject ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              selectedSubject === null
+                ? 'bg-[var(--primary-color)] text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
             }`}
-            onClick={() => setSelectedSubject(subject)}
+            onClick={() => setSelectedSubject(null)}
           >
-            {subject}
+            All Subjects
           </button>
-        ))}
-      </div>
+          {subjects.map(subject => (
+            <button
+              key={subject}
+              className={`px-5 py-2 rounded-full font-semibold transition ${
+                selectedSubject === subject
+                  ? 'bg-[var(--primary-color)] text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
+              }`}
+              onClick={() => setSelectedSubject(subject)}
+            >
+              {subject}
+            </button>
+          ))}
+        </div>
 
-      {/* Search input */}
-      <input
-        type="text"
-        placeholder="Search by title or subject..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        className="mb-6 w-full max-w-lg mx-auto p-3 rounded border border-indigo-300 dark:border-indigo-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-400 transition"
-      />
+        {/* Search bar aligned right */}
+        <div className="flex justify-end w-full sm:w-auto">
+          <input
+            type="text"
+            placeholder="Search by title or subject..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full sm:w-64 p-3 rounded border border-indigo-300 dark:border-indigo-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-400 transition"
+          />
+        </div>
+      </div>
 
       {loading && <p className="text-center text-indigo-700 dark:text-indigo-400">Loading notes...</p>}
 
@@ -134,11 +145,16 @@ export default function NotesPage() {
         {filteredNotes.map(note => {
           const isLiked = note.likedBy && user && note.likedBy.includes(user.uid);
           return (
-            <div key={note.id} className="border rounded-lg p-6 shadow bg-white dark:bg-gray-800 flex flex-col justify-between transition-colors">
+            <div
+              key={note.id}
+              className="border rounded-lg p-6 shadow bg-white dark:bg-gray-800 flex flex-col justify-between transition-colors"
+            >
               <div>
                 <h2 className="text-xl font-semibold text-indigo-800 dark:text-indigo-300 mb-2">{note.title}</h2>
                 <p className="text-indigo-600 dark:text-indigo-400 font-medium mb-1">Subject: {note.subject}</p>
-                <p className="text-indigo-600 dark:text-indigo-400 text-sm mb-3">Uploaded by: {note.uploaderEmail || note.userId}</p>
+                <p className="text-indigo-600 dark:text-indigo-400 text-sm mb-3">
+                  Uploaded by: {note.uploaderEmail || note.userId}
+                </p>
               </div>
               <div className="flex items-center justify-between mt-4">
                 <a
@@ -154,13 +170,19 @@ export default function NotesPage() {
                   <button
                     onClick={() => handleLike(note)}
                     className={`rounded-full px-3 py-1 text-sm font-semibold flex items-center gap-1 transition
-                      ${isLiked ? 'bg-[var(--primary-color)] text-white' : 'bg-gray-100 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-600'}`}
+                      ${
+                        isLiked
+                          ? 'bg-[var(--primary-color)] text-white'
+                          : 'bg-gray-100 dark:bg-gray-700 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-600'
+                      }`}
                     disabled={!user}
                     aria-label={isLiked ? 'Unlike note' : 'Like note'}
                   >
                     <span>👍</span> {note.likes || 0}
                   </button>
-                  <span className="text-indigo-500 dark:text-indigo-400 text-sm">Views: {note.views || 0}</span>
+                  <span className="text-indigo-500 dark:text-indigo-400 text-sm">
+                    Views: {note.views || 0}
+                  </span>
                 </div>
               </div>
             </div>
