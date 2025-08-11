@@ -13,6 +13,8 @@ export default function UploadPage() {
   const [pdfFile, setPdfFile] = useState(null);
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [summary, setSummary] = useState('');
+  const [generatingSummary, setGeneratingSummary] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -23,10 +25,11 @@ export default function UploadPage() {
 
   const handleFileChange = (e) => {
     setError('');
+    setSummary('');
+    setPdfFile(null);
     const file = e.target.files[0];
     if (file && file.type !== 'application/pdf') {
       setError('Please upload a PDF file.');
-      setPdfFile(null);
       return;
     }
     setPdfFile(file);
@@ -34,6 +37,8 @@ export default function UploadPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSummary('');
     if (!title || !subject || !pdfFile) {
       setError('All fields including PDF file are required.');
       return;
@@ -43,29 +48,56 @@ export default function UploadPage() {
       return;
     }
     setUploading(true);
-    setError('');
+
     try {
+      // 1. Upload file to Firebase Storage
       const timestamp = Date.now();
       const fileRef = ref(storage, `notes/${auth.currentUser.uid}/${timestamp}_${pdfFile.name}`);
       await uploadBytes(fileRef, pdfFile);
       const downloadURL = await getDownloadURL(fileRef);
+
+      // 2. Generate Summary via API
+      setGeneratingSummary(true);
+      const formData = new FormData();
+      formData.append('file', pdfFile);
+
+      const res = await fetch('/api/short-summary', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Failed to generate summary.');
+        setGeneratingSummary(false);
+        setUploading(false);
+        return;
+      }
+      setSummary(data.summary);
+
+      // 3. Save to Firestore including the summary
       await addDoc(collection(db, 'notes'), {
         title,
         subject,
         fileURL: downloadURL,
         userId: auth.currentUser.uid,
         createdAt: serverTimestamp(),
+        summary: data.summary,
         likes: 0,
         views: 0,
       });
-      setUploading(false);
+
       setTitle('');
       setSubject('');
       setPdfFile(null);
+      setError('');
+      setUploading(false);
+      setGeneratingSummary(false);
       router.push('/');
     } catch (err) {
       setError('Upload failed: ' + err.message);
       setUploading(false);
+      setGeneratingSummary(false);
     }
   };
 
@@ -77,6 +109,7 @@ export default function UploadPage() {
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {error && <p className="text-red-600 dark:text-red-400 text-center">{error}</p>}
+
           <input
             type="text"
             placeholder="Title"
@@ -100,12 +133,28 @@ export default function UploadPage() {
             className="w-full p-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 transition-colors"
             required
           />
+
+          {generatingSummary && (
+            <div className="text-indigo-600 text-center">Generating AI summary...</div>
+          )}
+
+          {summary && (
+            <div className="bg-blue-50 dark:bg-blue-900 p-3 rounded mb-2">
+              <h4 className="text-indigo-600 dark:text-indigo-200 font-semibold">AI Generated Summary:</h4>
+              <ul className="list-disc ml-5 text-sm text-blue-800 dark:text-blue-100">
+                {summary.split('\n').map((line, i) =>
+                  line.trim() ? <li key={i}>{line.trim()}</li> : null
+                )}
+              </ul>
+            </div>
+          )}
+
           <button
             type="submit"
-            disabled={uploading}
+            disabled={uploading || generatingSummary}
             className="w-full py-3 mt-2 rounded-lg bg-[var(--primary-color)] dark:bg-[var(--primary-dark)] hover:opacity-90 text-white font-semibold text-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {uploading ? 'Uploading...' : 'Upload Note'}
+            {uploading || generatingSummary ? 'Uploading...' : 'Upload Note'}
           </button>
         </form>
       </div>
