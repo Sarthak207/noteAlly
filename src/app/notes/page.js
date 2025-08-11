@@ -24,7 +24,8 @@ export default function NotesPage() {
   const [search, setSearch] = useState('');
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [subjects, setSubjects] = useState([]);
-  const [aiLoadingId, setAiLoadingId] = useState(null); // Track note being processed with AI
+  const [aiLoadingId, setAiLoadingId] = useState(null);
+  const [visibleSummaries, setVisibleSummaries] = useState({}); // Track per-note summary visibility
 
   // ---------------------
   // Data Fetch & Subscriptions
@@ -40,7 +41,6 @@ export default function NotesPage() {
       setNotes(allNotes);
       setLoading(false);
 
-      // Get unique subjects for filter buttons
       setSubjects([...new Set(allNotes.map(note => note.subject || 'Uncategorized'))]);
     });
 
@@ -88,6 +88,13 @@ export default function NotesPage() {
     } catch {
       toast.error('Failed to update view count');
     }
+  };
+
+  const toggleSummaryVisibility = (noteId) => {
+    setVisibleSummaries(prev => ({
+      ...prev,
+      [noteId]: !prev[noteId]
+    }));
   };
 
   // ---------------------
@@ -184,6 +191,7 @@ export default function NotesPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {filteredNotes.map(note => {
           const isLiked = note.likedBy && user && note.likedBy.includes(user.uid);
+          const showSummary = visibleSummaries[note.id] ?? true;
           return (
             <div
               key={note.id}
@@ -200,8 +208,18 @@ export default function NotesPage() {
                   Uploaded by: {note.uploaderEmail || note.userId}
                 </p>
 
+                {/* Toggle Summary Button */}
+                {(note.summary || note.points) && (
+                  <button
+                    onClick={() => toggleSummaryVisibility(note.id)}
+                    className="mb-2 rounded px-3 py-1 text-sm font-semibold bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+                  >
+                    {showSummary ? 'Hide AI Summary' : 'Show AI Summary'}
+                  </button>
+                )}
+
                 {/* AI Summary */}
-                {note.summary && (
+                {showSummary && note.summary && (
                   <div className="bg-blue-50 dark:bg-blue-900 px-3 py-2 rounded mb-2">
                     <h4 className="text-blue-900 dark:text-blue-100 text-sm font-semibold mb-1">
                       AI Summary
@@ -215,7 +233,7 @@ export default function NotesPage() {
                 )}
 
                 {/* AI Key Points / Questions */}
-                {note.points && (
+                {showSummary && note.points && (
                   <div className="bg-green-50 dark:bg-green-900 px-3 py-2 rounded mb-2">
                     <h4 className="text-green-900 dark:text-green-100 text-sm font-semibold mb-1">
                       AI Key Points / Questions
